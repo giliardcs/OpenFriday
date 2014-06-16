@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Open Friday Trier Sistemas</title>
+	
+	<style type="text/css">
+    
+    	#mapa{
+	    	width:100%;
+	    	height:500px;	
+    	}
+    
+    </style>
+    <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?libraries=places"></script>
+	<script>
+		var map = null;
+		function carregar(lat, lng){
+			var latlng = new google.maps.LatLng(lat, lng);
+					 
+			var myOptions = {
+					zoom: 8,
+					center: latlng,
+					mapTypeId: google.maps.MapTypeId.HYBRID
+				 };
+				 
+			//criando o mapa
+		   map = new google.maps.Map( document.getElementById("mapa") , myOptions );
+		}
+
+		marcarPorEndereco = function () {
+			var endereco = document.getElementById("endereco").value;
+			
+			geocoder = new google.maps.Geocoder();     
+			geocoder.geocode({'address':endereco + ', Brasil', 'region': 'BR' }, function(results, status){
+			    if( status = google.maps.GeocoderStatus.OK){
+			    	latlng = results[0].geometry.location;
+			        markerInicio = new google.maps.Marker({position: latlng,map: map});    
+			        map.setCenter(latlng);
+			        map.setZoom(15);
+			        informacoesMarcacao(markerInicio, results[0]);
+			    }          
+			});
+		}
+
+		informacoesMarcacao = function (markerInicio, latLng) {
+			var info = "<html>"+
+							"<b>Localização:</b> "+latLng.geometry.location+"<br>"+
+							"<b>Endereço:</b> "+latLng.formatted_address+"<br>"+
+							"<b>CEP:</b> "+latLng.address_components[7].long_name+"<br>"+
+						"</html>";
+			var infowindow = new google.maps.InfoWindow({
+			        content: info
+			});
+			             
+			google.maps.event.addListener(markerInicio, 'click', function(event) {
+			    infowindow.open(map,markerInicio);
+			});
+		}
+	</script>
+</head>
+<body onload="carregar('-28.467717280328483', '-48.99385064838213')">
+	<p id="demo">Open Friday (Bruno Carlos, Giliard, Renam)</p>
+	Endereço: <input type="text" value="marcolino martins cabral, 3760" name="endereco" id="endereco" size="100">
+	<input type="button" value="Localizar" onclick="marcarPorEndereco();">
+	<hr>
+	<div id="mapa"></div>
+</body>
+</html>
