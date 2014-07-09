@@ -48,26 +48,15 @@
 	    }
 
 		function trataLocs (results, status) {
-			var elem = document.getElementById('msg');
 			if (status == google.maps.GeocoderStatus.OK) {
 				map.setCenter(results[0].geometry.location);
 				var marker = new google.maps.Marker({
-				map: map, 
-				position: results[0].geometry.location  });
-				if (results.length > 1) {
-					var i, txt = '<select style="font-family:Verdana;font-size:8pt;width=550px;" onchange="mostraEnd(this.options[this.selectedIndex].text);">';
-					elem.innerHTML = 'O endereço exato não foi localizado - há ' +  results.length.toString() + ' resultados aproximados.<br />';
-					for (i = 0; i < results.length; i++) {
-					txt = txt + '<option value="' + i.toString() + '"';
-					if (i == 0)
-					txt = txt + ' selected="selected"'; 
-					txt = txt + '>' + results[i].formatted_address + '</option>';
-					}
-					txt = txt + '</select>'
-					elem.innerHTML = elem.innerHTML + txt;
-				}
-			} else
-			    elem.innerHTML = 'Erro no tratamento do endereço :<br /><b>' + status + '</b>';
+					map: map,
+					position: results[0].geometry.location
+					});
+			} else {
+				alert("Geocode was not successful for the following reason: " + status);
+			}
 		}
 		
 		function initializeDirections () {
